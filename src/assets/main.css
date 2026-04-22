@@ -6,8 +6,13 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+
+body {
+  background: #f4f4f4;
+}
+
 #app {
-  max-width: 1280px;import { Input } from '@/components/ui/button
+  max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   font-weight: normal;
