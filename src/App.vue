@@ -34,7 +34,7 @@ const currentComponent = computed(() => {
       <TabsTrigger value="list" 
                    class="cursor-pointer" 
                   @click="tab = 'list'" > 
-        Lista  
+        Felhasználók  
       </TabsTrigger>
 
        <TabsTrigger  value="todos"
