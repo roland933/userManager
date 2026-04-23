@@ -2,7 +2,10 @@
 import { onMounted, ref, computed } from 'vue'
 import { useUserStore } from '../stores/userStore'
 import { Spinner } from '@/components/ui/spinner'
-import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput, InputGroupText, InputGroupTextarea } from '@/components/ui/input-group'
+import  EmptyState  from '@/components/EmptyState.vue'
+
+
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput, InputGroupText } from '@/components/ui/input-group'
 import {
   Item,
   ItemActions,
@@ -11,11 +14,11 @@ import {
   ItemTitle,
 } from '@/components/ui/item'
 
-const store = useUserStore()
-const search = ref('')
+const store = useUserStore();
+const search = ref('');
 
 onMounted(() => {
-  store.fetchUsers()
+  store.fetchUsers();
 })
 
 const filteredUsers = computed(() => {
@@ -32,7 +35,7 @@ const searchResult = computed<number>(() => {
 
 })
 
-const itemVariant = (index) => {
+const itemVariant = (index:number) => {
   return index % 2 == 0 ? 'muted' : '';
 }
 
@@ -41,9 +44,7 @@ const itemVariant = (index) => {
 <template>
           <InputGroup class="bg-white !mb-8">
             <InputGroupInput placeholder="Keresés..."  v-model="search"  class="mb-5"/>
-            <InputGroupAddon>
-              <Search />
-            </InputGroupAddon>
+            
             <InputGroupAddon align="inline-end">
              {{searchResult}}
             </InputGroupAddon>
@@ -70,12 +71,9 @@ const itemVariant = (index) => {
       </ItemContent>
      
     </Item>
-
-    <div v-if="search && filteredUsers.length === 0" >
-      Nincs találat!
-
-    </div>
-  
   </div>
+
+  <empty-state :show="filteredUsers.length === 0 && !store.loading" />
+     
 
 </template>

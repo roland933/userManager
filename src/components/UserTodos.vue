@@ -1,26 +1,62 @@
-<script setup>
+<script setup lang=ts>
 
-import { onMounted,onUnmounted,watch, watchEffect,nextTick,ref } from 'vue';
+import { onMounted,onUnmounted,watch,ref,computed } from 'vue';
 import { useUserStore } from '../stores/userStore'
 import { userTodoStore } from '../stores/userTodoStore'
-import {storeToRefs} from 'pinia'
 import { Spinner } from '@/components/ui/spinner'
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput, InputGroupText } from '@/components/ui/input-group'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 import {
   Item,
-  ItemActions,
   ItemContent,
   ItemDescription,
-  ItemMedia,
   ItemTitle,
 } from '@/components/ui/item'
+
+import  EmptyState  from '@/components/EmptyState.vue'
 
 const store = useUserStore();
 const todoStore = userTodoStore();
 
-const itemVariant = (index) => {
+const itemVariant = (index:number) => {
   return index % 2 == 0 ? 'muted' : '';
 }
+
+const search = ref<string>('');
+const debouncedSearch = ref("");
+
+const todoStatus = ref<string>('all');
+
+const filteredTodos = computed(() => {
+
+  let result = todoStore.todos
+
+  if (debouncedSearch.value) {
+    result = result.filter(todo =>
+      todo.title.toLowerCase().includes(debouncedSearch.value.toLowerCase())
+    )
+  }
+
+  if (todoStatus.value === "completed") {
+    result = result.filter(todo => todo.completed)
+  }
+
+  if (todoStatus.value === "unCompleted") {
+    result = result.filter(todo => !todo.completed)
+  }
+
+  return result
+  
+})
 
 watch(() => store.selectedUser,(newUser)  => {
     if (newUser?.id) {
@@ -30,10 +66,49 @@ watch(() => store.selectedUser,(newUser)  => {
   { immediate: true }
 )
 
+
+let timeout = null;
+
+watch(search, (value) => {
+  clearTimeout(timeout)
+
+  timeout = setTimeout(() => {
+    debouncedSearch.value = value
+  }, 300)
+})
+
+
 </script>
 
 <template>
   <div v-if="store.selectedUser">
+<div class="flex flex-row gap-5">
+    <div class="basis-2/3">
+             <InputGroup class="bg-white !mb-8">
+                <InputGroupInput placeholder="Keresés..."  v-model="search"  class="mb-5" :disabled="todoStore.error"/>
+            </InputGroup>
+    </div>
+        <div class="basis-1/3">
+              <Select v-model="todoStatus">
+                    <SelectTrigger>
+                        <SelectValue placeholder="Mind" />
+                    </SelectTrigger>
+                    <SelectContent>
+                     <SelectItem value="all">
+                       Mind
+                    </SelectItem>
+                    <SelectItem value="completed">
+                        Teljesített
+                    </SelectItem>
+                    <SelectItem value="unCompleted">
+                        Nem teljesített
+                    </SelectItem>
+
+                    </SelectContent>
+                </Select>
+
+        </div>
+    </div>
 
           <div v-if="todoStore.loading"><Spinner /></div>
 
@@ -41,25 +116,29 @@ watch(() => store.selectedUser,(newUser)  => {
 
              <div class="flex flex-col gap-3" v-else>
                 <Item 
-                v-for="(todo,index) in todoStore.todos"
+                v-for="(todo,index) in filteredTodos"
                 :variant="itemVariant(index)"
                 class="cursor-pointer" 
                 :key="todo.id" 
                 >
                 <ItemContent>
-                    <ItemTitle>{{todo.title}}</ItemTitle>
+                    <ItemTitle>
+                        <Checkbox
+                            class="w-5 h-5"
+                            v-model="todo.completed"
+                            :id="`${todo.id}`"
+                            />
+                         
+                        <Label :for="`${todo.id}`" class="cursor-pointer"> {{todo.title}}</Label>
+                        </ItemTitle>
                 </ItemContent>
-     
               </Item>
+        </div>
 
+          <empty-state :show="filteredTodos.length === 0 && !todoStore.loading" />
 
-  </div>
-
-
-
+        
 </div>
     
       
-
-  
 </template>
