@@ -6,6 +6,11 @@ import { userTodoStore } from '../stores/userTodoStore';
 import  Spinner  from '@/components/spinner/Spinner.vue'
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import  Dialog  from '@/components/dialog/Dialog.vue';
+
+
+
 import {
   Select,
   SelectContent,
@@ -34,6 +39,8 @@ const itemVariant = (index:number) => {
 const search = ref<string>('');
 
 const todoStatus = ref<string>('all');
+
+const showAddModal = ref<boolean>(false);
 
 const filteredTodos = computed(() => {
 
@@ -70,30 +77,41 @@ watch(() => store.selectedUser,(newUser)  => {
 <template>
 <div class="wrapper relative min-h-100">
   <div v-if="store.selectedUser">
-      <div class="flex flex-row gap-5">
-          <div class="basis-2/3">
-                    <DebouncedSearch v-model="search" class="!mb-5"/>
-          </div>
-              <div class="basis-1/3">
-                    <Select v-model="todoStatus">
-                          <SelectTrigger>
-                              <SelectValue placeholder="Mind" />
-                          </SelectTrigger>
-                          <SelectContent>
-                          <SelectItem value="all">
-                            Mind
-                          </SelectItem>
-                          <SelectItem value="completed">
-                              Teljesített
-                          </SelectItem>
-                          <SelectItem value="unCompleted">
-                              Nem teljesített
-                          </SelectItem>
 
-                          </SelectContent>
-                      </Select>
+  <div class="top-content !mb-5 ">
+      <div class="flex gap-3 flex-row  justify-between">
+              <div class="flex-1">
+                  <DebouncedSearch v-model="search" />
               </div>
-          </div>
+                  <div class="flex-1">
+                        <Select v-model="todoStatus">
+                              <SelectTrigger>
+                                  <SelectValue placeholder="Mind" />
+                              </SelectTrigger>
+                              <SelectContent>
+                              <SelectItem value="all">
+                                Mind
+                              </SelectItem>
+                              <SelectItem value="completed">
+                                  Teljesített
+                              </SelectItem>
+                              <SelectItem value="unCompleted">
+                                  Nem teljesített
+                              </SelectItem>
+
+                              </SelectContent>
+                          </Select>
+                    </div>
+
+                   <div>
+                        
+                        <Dialog />
+                      
+                  </div>
+
+                </div>
+            </div>
+          
 
 
             <Spinner v-if="todoStore.loading"/>
