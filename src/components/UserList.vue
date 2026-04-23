@@ -1,9 +1,9 @@
 <script setup lang=ts>
 import { onMounted, ref, computed } from 'vue'
 import { useUserStore } from '../stores/userStore'
-import { Spinner } from '@/components/ui/spinner'
 import  EmptyState  from '@/components/EmptyState.vue'
 import  DebouncedSearch  from '@/components/search/DebouncedSearch.vue'
+import  Spinner  from '@/components/spinner/Spinner.vue'
 
 import {
   Item,
@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/item'
 
 const store = useUserStore();
+
 const search = ref<string>('');
 
 onMounted(() => {
@@ -36,17 +37,18 @@ const itemVariant = (index:number) => {
   return index % 2 == 0 ? 'muted' : '';
 }
 
+
+
 </script>
 
 <template>
+    <div class="wrapper relative min-h-100">
 
         <DebouncedSearch v-model="search" class="!mb-5" placeholder="Felhasználó keresése"/>
-       
-        <div v-if="store.loading">
-              <Spinner />
-        </div>
 
-  <div v-else-if="store.error">{{ store.error }}</div>
+        <Spinner v-if="store.loading" />
+
+        <div v-else-if="store.error">{{ store.error }}</div>
 
    <div class="flex flex-col gap-3" v-else>
     <Item v-for="(user,index) in filteredUsers"
@@ -66,6 +68,7 @@ const itemVariant = (index:number) => {
   </div>
 
   <empty-state :show="filteredUsers.length === 0 && !store.loading" />
-     
+    
+    </div>
 
 </template>

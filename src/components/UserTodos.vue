@@ -3,7 +3,7 @@
 import { onMounted,onUnmounted,watch,ref,computed } from 'vue';
 import { useUserStore } from '../stores/userStore';
 import { userTodoStore } from '../stores/userTodoStore';
-import { Spinner } from '@/components/ui/spinner';
+import  Spinner  from '@/components/spinner/Spinner.vue'
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import {
@@ -68,35 +68,36 @@ watch(() => store.selectedUser,(newUser)  => {
 </script>
 
 <template>
+<div class="wrapper relative min-h-100">
   <div v-if="store.selectedUser">
-<div class="flex flex-row gap-5">
-    <div class="basis-2/3">
-              <DebouncedSearch v-model="search" class="!mb-5"/>
-    </div>
-        <div class="basis-1/3">
-              <Select v-model="todoStatus">
-                    <SelectTrigger>
-                        <SelectValue placeholder="Mind" />
-                    </SelectTrigger>
-                    <SelectContent>
-                     <SelectItem value="all">
-                       Mind
-                    </SelectItem>
-                    <SelectItem value="completed">
-                        Teljesített
-                    </SelectItem>
-                    <SelectItem value="unCompleted">
-                        Nem teljesített
-                    </SelectItem>
+      <div class="flex flex-row gap-5">
+          <div class="basis-2/3">
+                    <DebouncedSearch v-model="search" class="!mb-5"/>
+          </div>
+              <div class="basis-1/3">
+                    <Select v-model="todoStatus">
+                          <SelectTrigger>
+                              <SelectValue placeholder="Mind" />
+                          </SelectTrigger>
+                          <SelectContent>
+                          <SelectItem value="all">
+                            Mind
+                          </SelectItem>
+                          <SelectItem value="completed">
+                              Teljesített
+                          </SelectItem>
+                          <SelectItem value="unCompleted">
+                              Nem teljesített
+                          </SelectItem>
 
-                    </SelectContent>
-                </Select>
+                          </SelectContent>
+                      </Select>
+              </div>
+          </div>
 
-        </div>
-    </div>
 
-          <div v-if="todoStore.loading"><Spinner /></div>
-
+            <Spinner v-if="todoStore.loading"/>
+          
           <div v-else-if="todoStore.error">{{ store.error }}</div>
 
              <div class="flex flex-col gap-3" v-else>
@@ -122,5 +123,5 @@ watch(() => store.selectedUser,(newUser)  => {
           <empty-state :show="filteredTodos.length === 0 && !todoStore.loading" />
 </div>
     
-      
+      </div>
 </template>
