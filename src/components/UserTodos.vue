@@ -108,14 +108,16 @@ watch(() => store.selectedUser,(newUser)  => {
                 :key="todo.id" 
                 >
                 <ItemContent>
-                    <ItemTitle>
+                    <ItemTitle  class="!font-semibold">
                         <Checkbox
-                            class="w-5 h-5"
+
+                            class="w-5 h-5 border-1 border-gray-600"
+                            disabled
                             v-model="todo.completed"
                             :id="`${todo.id}`"
                             />
                          
-                        <Label :for="`${todo.id}`" class="cursor-pointer"> {{todo.title}}</Label>
+                        {{todo.title}}
                         </ItemTitle>
                 </ItemContent>
               </Item>
