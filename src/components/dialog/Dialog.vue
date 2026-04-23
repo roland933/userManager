@@ -13,17 +13,39 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
+import { userTodoStore } from '@/stores/userTodoStore';
+
 import {ref} from 'vue';
 
+const todoStore = userTodoStore();
+
+const title = ref(null);
 
 const open = ref(false);
+
+const handleAddNew = () => {
+    
+
+    if (!title.value.trim()) return
+
+    const newTodo = {
+            id: Date.now(),
+            title:title.value,
+            completed: false
+    }
+
+    open.value = false;
+    title.value = ""
+    todoStore.todos.push(newTodo);
+
+}
 
 
 </script>
 
 <template>
   <Dialog v-model:open="open">
-    <form>
+    <form >
       <DialogTrigger as-child>
         <Button variant="outline">
           Új felvétel
@@ -39,7 +61,7 @@ const open = ref(false);
         <div class="grid gap-4">
           <div class="grid gap-3">
             <Label for="name-1">Név</Label>
-            <Input id="name-1" name="name"  />
+            <Input id="name-1" name="name"  v-model="title" />
           </div>
           
         </div>
@@ -49,7 +71,7 @@ const open = ref(false);
               Mégse
             </Button>
           </DialogClose>
-            <Button  @click="() => open = false">
+            <Button @click="handleAddNew">
             Mentés
             </Button>
         </DialogFooter>
