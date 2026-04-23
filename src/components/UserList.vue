@@ -3,9 +3,8 @@ import { onMounted, ref, computed } from 'vue'
 import { useUserStore } from '../stores/userStore'
 import { Spinner } from '@/components/ui/spinner'
 import  EmptyState  from '@/components/EmptyState.vue'
+import  DebouncedSearch  from '@/components/search/DebouncedSearch.vue'
 
-
-import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput, InputGroupText } from '@/components/ui/input-group'
 import {
   Item,
   ItemActions,
@@ -15,7 +14,7 @@ import {
 } from '@/components/ui/item'
 
 const store = useUserStore();
-const search = ref('');
+const search = ref<string>('');
 
 onMounted(() => {
   store.fetchUsers();
@@ -28,11 +27,9 @@ const filteredUsers = computed(() => {
 })
 
 const searchResult = computed<number>(() => {
-
   if(search.value) {
     return filteredUsers.value.length;
   }
-
 })
 
 const itemVariant = (index:number) => {
@@ -42,17 +39,12 @@ const itemVariant = (index:number) => {
 </script>
 
 <template>
-          <InputGroup class="bg-white !mb-8">
-            <InputGroupInput placeholder="Keresés..."  v-model="search"  class="mb-5"/>
-            
-            <InputGroupAddon align="inline-end">
-             {{searchResult}}
-            </InputGroupAddon>
-          </InputGroup>
-        
-  <div v-if="store.loading">
-        <Spinner />
-  </div>
+
+        <DebouncedSearch v-model="search" class="!mb-5" placeholder="Felhasználó keresése"/>
+       
+        <div v-if="store.loading">
+              <Spinner />
+        </div>
 
   <div v-else-if="store.error">{{ store.error }}</div>
 

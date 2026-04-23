@@ -1,12 +1,11 @@
 <script setup lang=ts>
 
 import { onMounted,onUnmounted,watch,ref,computed } from 'vue';
-import { useUserStore } from '../stores/userStore'
-import { userTodoStore } from '../stores/userTodoStore'
-import { Spinner } from '@/components/ui/spinner'
-import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput, InputGroupText } from '@/components/ui/input-group'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Label } from '@/components/ui/label'
+import { useUserStore } from '../stores/userStore';
+import { userTodoStore } from '../stores/userTodoStore';
+import { Spinner } from '@/components/ui/spinner';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -22,7 +21,8 @@ import {
   ItemTitle,
 } from '@/components/ui/item'
 
-import  EmptyState  from '@/components/EmptyState.vue'
+import  EmptyState  from '@/components/EmptyState.vue';
+import  DebouncedSearch  from '@/components/search/DebouncedSearch.vue';
 
 const store = useUserStore();
 const todoStore = userTodoStore();
@@ -32,7 +32,6 @@ const itemVariant = (index:number) => {
 }
 
 const search = ref<string>('');
-const debouncedSearch = ref("");
 
 const todoStatus = ref<string>('all');
 
@@ -40,9 +39,9 @@ const filteredTodos = computed(() => {
 
   let result = todoStore.todos
 
-  if (debouncedSearch.value) {
+  if (search.value) {
     result = result.filter(todo =>
-      todo.title.toLowerCase().includes(debouncedSearch.value.toLowerCase())
+      todo.title.toLowerCase().includes(search.value.toLowerCase())
     )
   }
 
@@ -66,27 +65,13 @@ watch(() => store.selectedUser,(newUser)  => {
   { immediate: true }
 )
 
-
-let timeout = null;
-
-watch(search, (value) => {
-  clearTimeout(timeout)
-
-  timeout = setTimeout(() => {
-    debouncedSearch.value = value
-  }, 300)
-})
-
-
 </script>
 
 <template>
   <div v-if="store.selectedUser">
 <div class="flex flex-row gap-5">
     <div class="basis-2/3">
-             <InputGroup class="bg-white !mb-8">
-                <InputGroupInput placeholder="Keresés..."  v-model="search"  class="mb-5" :disabled="todoStore.error"/>
-            </InputGroup>
+              <DebouncedSearch v-model="search" class="!mb-5"/>
     </div>
         <div class="basis-1/3">
               <Select v-model="todoStatus">
@@ -134,10 +119,7 @@ watch(search, (value) => {
                 </ItemContent>
               </Item>
         </div>
-
           <empty-state :show="filteredTodos.length === 0 && !todoStore.loading" />
-
-        
 </div>
     
       
