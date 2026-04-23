@@ -52,7 +52,7 @@ const currentComponent = computed(() => {
       </TabsTrigger>
     </TabsList>
 
-    <TabsContent :value="tab" class="bg-white p-5 rounded-lg">
+    <TabsContent :value="tab" class="bg-white p-5 rounded-lg shadow-lg">
         <component :is="currentComponent" />
     </TabsContent>
 
