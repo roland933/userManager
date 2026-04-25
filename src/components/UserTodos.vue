@@ -9,6 +9,7 @@ import  TodoItem  from '@/components/TodoItem.vue';
 import  EmptyState  from '@/components/EmptyState.vue';
 import  DebouncedSearch  from '@/components/search/DebouncedSearch.vue';
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { Button } from '@/components/ui/button'
 import {
   Select,
   SelectContent,
@@ -29,6 +30,11 @@ const todoStore = userTodoStore();
 const search = ref<string>('');
 
 const todoStatus = ref<string>('all');
+
+const resetFilter = () => {
+    search.value = '';
+    todoStatus.value = 'all'
+}
 
 const filteredTodos = computed(() => {
 
@@ -65,13 +71,28 @@ watch(() => store.selectedUser,(newUser)  => {
 <template>
 <div class="wrapper relative min-h-100">
   <div v-if="store.selectedUser">
+    <div class="summary  pl-2 !mb-4 rounded-sm ">
+                <div class="flex gap-4 flex-row text-[13px]">
+                        <div >
+                           Összes feladat: 8
+                          </div>
 
+                          <div >
+                           Teljesített: 5
+                          </div>
+
+                            <div>
+                            Nem teljesített: 10
+                          </div>
+
+                    </div>
+            </div>
   <div class="top-content !mb-5 ">
-      <div class="flex gap-3 flex-row  justify-between">
+      <div class="flex gap-3 flex-row  justify-between !mb-3">
               <div class="flex-1">
                   <DebouncedSearch v-model="search" />
               </div>
-                  <div class="flex-1">
+                  <div >
                         <Select v-model="todoStatus">
                               <SelectTrigger>
                                   <SelectValue placeholder="Mind" />
@@ -91,11 +112,17 @@ watch(() => store.selectedUser,(newUser)  => {
                           </Select>
                     </div>
 
+                     <div class="flex-1">
+                        <Button variant="outline" class="cursor-pointer" @click="resetFilter()">Szűrő ürítés</Button>
+                    </div>
+
                    <div>
                         <Dialog />
                   </div>
-
+                
                 </div>
+              
+
             </div>
           
             <Spinner v-if="todoStore.loading"/>
@@ -104,7 +131,7 @@ watch(() => store.selectedUser,(newUser)  => {
 
                 <div class="flex flex-col gap-3" v-else v-if="filteredTodos.length !== 0">
                        <ScrollArea class="h-96 rounded-md border">
-                          <TodoItem :items="filteredTodos" />
+                          <TodoItem :items="filteredTodos" :itemClass="() => '!rounded-none border-s-0 border-l-0 border-r-0'"/>
                         </ScrollArea>
 
                   </div>
@@ -112,6 +139,9 @@ watch(() => store.selectedUser,(newUser)  => {
 
           <empty-state :show="filteredTodos.length === 0 && !todoStore.loading" />
       </div>
+
+       
     
       </div>
+     
 </template>
