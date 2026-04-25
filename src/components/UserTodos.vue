@@ -8,8 +8,9 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import  Dialog  from '@/components/dialog/Dialog.vue';
-
-
+import { CircleX } from 'lucide-vue-next'
+import  EmptyState  from '@/components/EmptyState.vue';
+import  DebouncedSearch  from '@/components/search/DebouncedSearch.vue';
 
 import {
   Select,
@@ -22,12 +23,12 @@ import {
 import {
   Item,
   ItemContent,
+  ItemActions,
   ItemDescription,
   ItemTitle,
 } from '@/components/ui/item'
 
-import  EmptyState  from '@/components/EmptyState.vue';
-import  DebouncedSearch  from '@/components/search/DebouncedSearch.vue';
+
 
 const store = useUserStore();
 const todoStore = userTodoStore();
@@ -122,22 +123,27 @@ watch(() => store.selectedUser,(newUser)  => {
                 <Item 
                 v-for="(todo,index) in filteredTodos"
                 :variant="itemVariant(index)"
-                class="cursor-pointer" 
+                 
                 :key="todo.id" 
                 >
                 <ItemContent>
-                    <ItemTitle  class="!font-semibold">
+                    <ItemTitle   :class="['!font-semibold',{'line-through text-gray-400':todo.completed}]">
                         <Checkbox
-
+                           @update:model-value="todoStore.toggleTodo(todo.id)"
                             class="w-5 h-5 border-1 border-gray-600"
-                            disabled
                             v-model="todo.completed"
                             :id="`${todo.id}`"
                             />
                          
                         {{todo.title}}
+
                         </ItemTitle>
                 </ItemContent>
+                 <ItemActions>
+                            <Button  :class="{'cursor-pointer':!todo.completed}" variant="outline" size="icon" aria-label="Submit" :disabled="todo.completed" @click="todoStore.deleteTodo(todo.id)">
+                             <CircleX />
+                          </Button>
+                 </ItemActions>
               </Item>
         </div>
           <empty-state :show="filteredTodos.length === 0 && !todoStore.loading" />

@@ -26,10 +26,25 @@ export const userTodoStore = defineStore('userTodo',() => {
 
     }
 
+    const toggleTodo = (id:number) => {
+         const todo = todos.value.find(t => t.id === id);
+         if(todo) {
+
+            todo.completed != todo.compoleted
+         }
+    }
+
+    const deleteTodo = (id:number) => {
+         todos.value = todos.value.filter(t => t.id !== id) 
+    }
+
+
 
 
     return {
         fetchTodos,
+        toggleTodo,
+        deleteTodo,
         loading,
         error,
         todos
