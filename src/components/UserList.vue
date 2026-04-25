@@ -4,7 +4,8 @@ import { useUserStore } from '../stores/userStore'
 import  EmptyState  from '@/components/EmptyState.vue'
 import  DebouncedSearch  from '@/components/search/DebouncedSearch.vue'
 import  Spinner  from '@/components/spinner/Spinner.vue'
-
+import  UserItem  from '@/components/Item.vue';
+import { cn } from "@/lib/utils"
 import {
   Item,
   ItemActions,
@@ -12,6 +13,7 @@ import {
   ItemDescription,
   ItemTitle,
 } from '@/components/ui/item'
+import { User } from 'lucide-vue-next'
 
 const store = useUserStore();
 
@@ -27,16 +29,20 @@ const filteredUsers = computed(() => {
   )
 })
 
+
+const handleSelectedUser = (user) => {
+    store.setSelectedUser(user);
+}
+
+const isSelected = (user) => {
+  return store.selectedUser?.id === user.id;
+}
+
 const searchResult = computed<number>(() => {
   if(search.value) {
     return filteredUsers.value.length;
   }
 })
-
-const itemVariant = (index:number) => {
-  return index % 2 == 0 ? 'muted' : '';
-}
-
 
 
 </script>
@@ -51,20 +57,29 @@ const itemVariant = (index:number) => {
         <div v-else-if="store.error">{{ store.error }}</div>
 
    <div class="flex flex-col gap-3" v-else>
-    <Item v-for="(user,index) in filteredUsers"
-          :variant="itemVariant(index)"
-          class="cursor-pointer" 
-          :class="{ 'bg-gray-200': store.selectedUser?.id === user.id }" 
-          :key="user.id" 
-          @click="store.setSelectedUser(user)">
-      <ItemContent>
-        <ItemTitle>{{user.name}}</ItemTitle>
-        <ItemDescription>
-          {{user.email}}
-        </ItemDescription>
-      </ItemContent>
-     
-    </Item>
+
+        <UserItem :items="filteredUsers"
+              
+                  @select="handleSelectedUser",
+                   >
+                 
+
+             <template v-slot:itemTitle="{item}">
+                      <div :class="{ 'bg-gray-200': isSelected(item) }" >
+                          <ItemTitle>
+                            {{item.name}}
+                          </ItemTitle>
+                  
+                          <ItemDescription>
+                            {{item.email}}
+                          </ItemDescription>
+                      </div>
+                         
+                      
+                </template>
+                
+          </UserItem> 
+
   </div>
 
   <empty-state :show="filteredUsers.length === 0 && !store.loading" />

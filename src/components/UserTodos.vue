@@ -4,11 +4,8 @@ import { onMounted,onUnmounted,watch,ref,computed } from 'vue';
 import { useUserStore } from '../stores/userStore';
 import { userTodoStore } from '../stores/userTodoStore';
 import  Spinner  from '@/components/spinner/Spinner.vue'
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
 import  Dialog  from '@/components/dialog/Dialog.vue';
-import { CircleX } from 'lucide-vue-next'
+import  TodoItem  from '@/components/TodoItem.vue';
 import  EmptyState  from '@/components/EmptyState.vue';
 import  DebouncedSearch  from '@/components/search/DebouncedSearch.vue';
 
@@ -20,28 +17,13 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-import {
-  Item,
-  ItemContent,
-  ItemActions,
-  ItemDescription,
-  ItemTitle,
-} from '@/components/ui/item'
-
-
 
 const store = useUserStore();
 const todoStore = userTodoStore();
 
-const itemVariant = (index:number) => {
-  return index % 2 == 0 ? 'muted' : '';
-}
-
 const search = ref<string>('');
 
 const todoStatus = ref<string>('all');
-
-const showAddModal = ref<boolean>(false);
 
 const filteredTodos = computed(() => {
 
@@ -113,38 +95,15 @@ watch(() => store.selectedUser,(newUser)  => {
                 </div>
             </div>
           
-
-
             <Spinner v-if="todoStore.loading"/>
           
           <div v-else-if="todoStore.error">{{ store.error }}</div>
 
              <div class="flex flex-col gap-3" v-else>
-                <Item 
-                v-for="(todo,index) in filteredTodos"
-                :variant="itemVariant(index)"
-                 
-                :key="todo.id" 
-                >
-                <ItemContent>
-                    <ItemTitle   :class="['!font-semibold',{'line-through text-gray-400':todo.completed}]">
-                        <Checkbox
-                           @update:model-value="todoStore.toggleTodo(todo.id)"
-                            class="w-5 h-5 border-1 border-gray-600"
-                            v-model="todo.completed"
-                            :id="`${todo.id}`"
-                            />
-                         
-                        {{todo.title}}
 
-                        </ItemTitle>
-                </ItemContent>
-                 <ItemActions>
-                            <Button  :class="{'cursor-pointer':!todo.completed}" variant="outline" size="icon" aria-label="Submit" :disabled="todo.completed" @click="todoStore.deleteTodo(todo.id)">
-                             <CircleX />
-                          </Button>
-                 </ItemActions>
-              </Item>
+              <TodoItem :items="filteredTodos" />
+
+                     
         </div>
           <empty-state :show="filteredTodos.length === 0 && !todoStore.loading" />
 </div>
