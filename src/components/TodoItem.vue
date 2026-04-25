@@ -29,8 +29,6 @@ import { getItemVariant } from '@/js/ItemVariant'
 
   <TodoItem :items="items" 
             :itemVariant="(index:number) => getItemVariant(index,'outline')"
-            
-            
             >
 
                           <template v-slot:itemTitle="{item}">
@@ -51,7 +49,6 @@ import { getItemVariant } from '@/js/ItemVariant'
                           <template v-slot:itemActions={item}>
                                       <Button  :class="{'cursor-pointer':!item.completed}" 
                                                 variant="ghost"
-                                               
                                                 size="icon" 
                                                 :disabled="item.completed" 
                                                 @click="todoStore.deleteTodo(item.id)">

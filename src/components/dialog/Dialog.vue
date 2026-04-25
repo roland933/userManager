@@ -54,9 +54,7 @@ const handleAddNew = () => {
       <DialogContent class="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Feladat felvétel</DialogTitle>
-          <DialogDescription>
-           
-          </DialogDescription>
+          
         </DialogHeader>
         <div class="grid gap-4">
           <div class="grid gap-3">

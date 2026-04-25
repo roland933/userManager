@@ -23,6 +23,7 @@ const props = defineProps({
             <Item
                 v-for="(item,index) in items"
                 :variant="itemVariant? itemVariant(index):''" 
+                class="hover:bg-gray-300"
                 :class="itemClass ? itemClass(item, index) : ''"
                 :key="item.id"
                 >
