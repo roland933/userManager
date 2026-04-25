@@ -47,7 +47,7 @@ const handleAddNew = () => {
   <Dialog v-model:open="open">
     <form >
       <DialogTrigger as-child>
-        <Button variant="outline">
+        <Button cursor-pointer>
           Új felvétel
         </Button>
       </DialogTrigger>

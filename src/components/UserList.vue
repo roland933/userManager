@@ -6,6 +6,7 @@ import  DebouncedSearch  from '@/components/search/DebouncedSearch.vue'
 import  Spinner  from '@/components/spinner/Spinner.vue'
 import  UserItem  from '@/components/Item.vue';
 import { cn } from "@/lib/utils"
+import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   Item,
   ItemActions,
@@ -58,28 +59,30 @@ const searchResult = computed<number>(() => {
         <div v-else-if="store.error">{{ store.error }}</div>
 
    <div class="flex flex-col gap-3" v-else>
+        <ScrollArea class="h-96 rounded-md border" v-if="filteredUsers.length !== 0">
+              <UserItem :items="filteredUsers"
+                        @select="handleSelectedUser",
+                        :itemVariant="(index:number) => getItemVariant(index)"
+                        :itemClass="(item:object) => store.selectedUser?.id === item.id ? 'bg-gray-200' : ''"
+                        >
+                      
 
-        <UserItem :items="filteredUsers"
-                  @select="handleSelectedUser",
-                  :itemVariant="(index:number) => getItemVariant(index)"
-                  :itemClass="(item:object) => store.selectedUser?.id === item.id ? 'bg-gray-200' : ''"
-                   >
-                 
+                  <template v-slot:itemTitle="{item}">
+                            <div  @click="handleSelectedUser(item)">
+                                <ItemTitle>
+                                  {{item.name}}
+                                </ItemTitle>
+                        
+                                <ItemDescription>
+                                  {{item.email}}
+                                </ItemDescription>
+                            </div>
+            
+                      </template>
+                      
+                </UserItem> 
 
-             <template v-slot:itemTitle="{item}">
-                      <div  @click="handleSelectedUser(item)">
-                          <ItemTitle>
-                            {{item.name}}
-                          </ItemTitle>
-                  
-                          <ItemDescription>
-                            {{item.email}}
-                          </ItemDescription>
-                      </div>
-      
-                </template>
-                
-          </UserItem> 
+          </ScrollArea>
 
   </div>
 

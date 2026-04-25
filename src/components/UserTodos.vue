@@ -8,7 +8,7 @@ import  Dialog  from '@/components/dialog/Dialog.vue';
 import  TodoItem  from '@/components/TodoItem.vue';
 import  EmptyState  from '@/components/EmptyState.vue';
 import  DebouncedSearch  from '@/components/search/DebouncedSearch.vue';
-
+import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   Select,
   SelectContent,
@@ -92,11 +92,7 @@ watch(() => store.selectedUser,(newUser)  => {
                     </div>
 
                    <div>
-
-                   
-                        
                         <Dialog />
-                      
                   </div>
 
                 </div>
@@ -106,12 +102,12 @@ watch(() => store.selectedUser,(newUser)  => {
           
              <div v-else-if="todoStore.error">{{ store.error }}</div>
 
-             <div class="flex flex-col gap-3" v-else>
+                <div class="flex flex-col gap-3" v-else v-if="filteredTodos.length !== 0">
+                       <ScrollArea class="h-96 rounded-md border">
+                          <TodoItem :items="filteredTodos" />
+                        </ScrollArea>
 
-              <TodoItem :items="filteredTodos" />
-
-                     
-              </div>
+                  </div>
 
 
           <empty-state :show="filteredTodos.length === 0 && !todoStore.loading" />
