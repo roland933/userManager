@@ -19,7 +19,7 @@ import {ref} from 'vue';
 
 const todoStore = userTodoStore();
 
-const title = ref(null);
+const title = ref('');
 
 const open = ref(false);
 

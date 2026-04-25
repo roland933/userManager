@@ -19,13 +19,19 @@ const props = defineProps({
   },
 })
 
+import { getItemVariant } from '@/js/ItemVariant'
+
 
 </script>
   
   
   <template>
 
-  <TodoItem :items="items" >
+  <TodoItem :items="items" 
+            :itemVariant="(index:number) => getItemVariant(index,'outline')"
+            
+            
+            >
 
                           <template v-slot:itemTitle="{item}">
                                 <ItemTitle   >
@@ -44,11 +50,12 @@ const props = defineProps({
 
                           <template v-slot:itemActions={item}>
                                       <Button  :class="{'cursor-pointer':!item.completed}" 
-                                                variant="outline" 
+                                                variant="ghost"
+                                               
                                                 size="icon" 
                                                 :disabled="item.completed" 
                                                 @click="todoStore.deleteTodo(item.id)">
-                                      <CircleX />
+                                      <CircleX class="size-5 text-red-400"/>
                                     </Button>
                           </template>
                         </TodoItem>

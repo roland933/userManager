@@ -10,31 +10,24 @@ const props = defineProps({
   items: {
     type:Array,
   },
-  variant:{
-    type:String,
-    default:'muted'
-  }
+ 
+
+   itemClass: Function,
+   itemVariant:Function,
 })
-
-const itemVariant = (index:number) => {
-  return index % 2 == 0 ? props.variant : '';
-}
-
-const emit = defineEmits(['select']);
 
 
 </script>
 
 <template>
-    
             <Item
                 v-for="(item,index) in items"
-                :variant="itemVariant(index)" 
-                @click="emit('select',item)"
+                :variant="itemVariant? itemVariant(index):''" 
+                :class="itemClass ? itemClass(item, index) : ''"
                 :key="item.id"
                 >
               
-            
+           
               <ItemContent class="cursor-pointer" >
                   <slot name="itemTitle" :item="item" /> 
               </ItemContent>

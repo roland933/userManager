@@ -17,6 +17,11 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
+import {
+
+  DialogTrigger,
+} from '@/components/ui/dialog'
+
 
 const store = useUserStore();
 const todoStore = userTodoStore();
@@ -87,6 +92,8 @@ watch(() => store.selectedUser,(newUser)  => {
                     </div>
 
                    <div>
+
+                   
                         
                         <Dialog />
                       
@@ -97,16 +104,18 @@ watch(() => store.selectedUser,(newUser)  => {
           
             <Spinner v-if="todoStore.loading"/>
           
-          <div v-else-if="todoStore.error">{{ store.error }}</div>
+             <div v-else-if="todoStore.error">{{ store.error }}</div>
 
              <div class="flex flex-col gap-3" v-else>
 
               <TodoItem :items="filteredTodos" />
 
                      
-        </div>
+              </div>
+
+
           <empty-state :show="filteredTodos.length === 0 && !todoStore.loading" />
-</div>
+      </div>
     
       </div>
 </template>

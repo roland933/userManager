@@ -14,6 +14,7 @@ import {
   ItemTitle,
 } from '@/components/ui/item'
 import { User } from 'lucide-vue-next'
+import { getItemVariant } from '@/js/ItemVariant'
 
 const store = useUserStore();
 
@@ -59,13 +60,14 @@ const searchResult = computed<number>(() => {
    <div class="flex flex-col gap-3" v-else>
 
         <UserItem :items="filteredUsers"
-              
                   @select="handleSelectedUser",
+                  :itemVariant="(index:number) => getItemVariant(index)"
+                  :itemClass="(item:object) => store.selectedUser?.id === item.id ? 'bg-gray-200' : ''"
                    >
                  
 
              <template v-slot:itemTitle="{item}">
-                      <div :class="{ 'bg-gray-200': isSelected(item) }" >
+                      <div  @click="handleSelectedUser(item)">
                           <ItemTitle>
                             {{item.name}}
                           </ItemTitle>
@@ -74,8 +76,7 @@ const searchResult = computed<number>(() => {
                             {{item.email}}
                           </ItemDescription>
                       </div>
-                         
-                      
+      
                 </template>
                 
           </UserItem> 
