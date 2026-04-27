@@ -86,7 +86,7 @@ watch(() => userStore.selectedUser,(newUser)  => {
     </div>
 
                     </div>
-            </div>
+            
   <div class="top-content !mb-5 ">
       <div class="flex gap-3 flex-row  justify-between !mb-3">
               <div class="flex-1">
@@ -138,10 +138,10 @@ watch(() => userStore.selectedUser,(newUser)  => {
 
 
           <empty-state :show="filteredTodos.length === 0 && !todoStore.loading" />
-      </div>
-
-       
+     
+</div>
+     
     
-      </div>
+     
      
 </template>
