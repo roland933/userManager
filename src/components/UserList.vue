@@ -26,25 +26,14 @@ onMounted(() => {
 })
 
 const filteredUsers = computed(() => {
-  return store.users.filter(user =>
-    user.name.toLowerCase().includes(search.value.toLowerCase())
+  return store.users.filter(user =>  user.name.toLowerCase().includes(search.value.toLowerCase())
+             
   )
 })
-
 
 const handleSelectedUser = (user) => {
     store.setSelectedUser(user);
 }
-
-const isSelected = (user) => {
-  return store.selectedUser?.id === user.id;
-}
-
-const searchResult = computed<number>(() => {
-  if(search.value) {
-    return filteredUsers.value.length;
-  }
-})
 
 
 </script>
