@@ -38,6 +38,18 @@ export const userTodoStore = defineStore('userTodo',() => {
          todos.value = todos.value.filter(t => t.id !== id) 
     }
 
+    const getAllTodoNumber = computed<number>(() => {
+      return todos.value.length;
+    })
+
+    const getCompletedTodoNumber  = computed<number>(() => {
+      return todos.value.filter(t => t.completed).length;
+    })
+
+    const getUnCompletedTodoNumber = computed<number>(() => {
+         return todos.value.filter(t => !t.completed).length;
+    });
+
 
 
 
@@ -45,6 +57,9 @@ export const userTodoStore = defineStore('userTodo',() => {
         fetchTodos,
         toggleTodo,
         deleteTodo,
+        getAllTodoNumber,
+        getCompletedTodoNumber,
+        getUnCompletedTodoNumber,
         loading,
         error,
         todos

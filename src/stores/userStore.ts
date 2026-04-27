@@ -27,7 +27,9 @@ export const useUserStore = defineStore('user',() => {
         selectedUser.value = user
     }
 
-    const hasSelectedUser = computed(() => !!selectedUser.value)
+    const hasSelectedUser = computed<boolean>(() => !!selectedUser.value)
+
+    const getUserName = computed<string>(() =>   selectedUser.value.name)
 
 
     return {
@@ -35,6 +37,7 @@ export const useUserStore = defineStore('user',() => {
         loading,
         fetchUsers,
         setSelectedUser,
+        getUserName,
         selectedUser,
         hasSelectedUser,
         error

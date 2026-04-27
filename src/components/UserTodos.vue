@@ -17,14 +17,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-
-import {
-
-  DialogTrigger,
-} from '@/components/ui/dialog'
+import Badge from './ui/badge/Badge.vue';
 
 
-const store = useUserStore();
+
+const userStore = useUserStore();
 const todoStore = userTodoStore();
 
 const search = ref<string>('');
@@ -58,7 +55,7 @@ const filteredTodos = computed(() => {
   
 })
 
-watch(() => store.selectedUser,(newUser)  => {
+watch(() => userStore.selectedUser,(newUser)  => {
     if (newUser?.id) {
       todoStore.fetchTodos(newUser.id);
     }
@@ -70,20 +67,23 @@ watch(() => store.selectedUser,(newUser)  => {
 
 <template>
 <div class="wrapper relative min-h-100">
-  <div v-if="store.selectedUser">
-    <div class="summary  pl-2 !mb-4 rounded-sm ">
-                <div class="flex gap-4 flex-row text-[13px]">
-                        <div >
-                           Összes feladat: 8
-                          </div>
+  <div v-if="userStore.selectedUser">
+    <div class="flex gap-3 flex-row !mb-6 text-[14px] border-b-2 pb-4">
+        <div class="flex-1">
+              Felhasználó: <span class="!font-bold">{{userStore.getUserName }} </span>
+        </div>
+        <div >
+              Összes feladat: <Badge   class="h-5 min-w-5 rounded-full px-1 tabular-nums">{{todoStore.getAllTodoNumber  }}</Badge>
+        </div>
+        <div>
+            Teljesített feladatok száma:  <Badge class="h-5 min-w-5 rounded-full px-1 tabular-nums bg-green-600">{{todoStore.getCompletedTodoNumber  }}</Badge>
+        </div>
+        <div>
+            Nem Teljesített feladatok száma: <Badge  class="h-5 min-w-5 rounded-full px-1 tabular-nums bg-red-500">{{todoStore.getUnCompletedTodoNumber  }}</Badge>
+        </div>
 
-                          <div >
-                           Teljesített: 5
-                          </div>
 
-                            <div>
-                            Nem teljesített: 10
-                          </div>
+    </div>
 
                     </div>
             </div>
